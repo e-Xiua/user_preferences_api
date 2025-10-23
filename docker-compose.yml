@@ -1,0 +1,54 @@
+version: '3.9'
+
+services:
+  user_preferences_api:
+    build:
+      context: ./preferences
+      dockerfile: Dockerfile
+    image: user-preferences-api:latest
+    container_name: user_preferences_api
+    ports:
+      - "${PREFERENCES_API_PORT:-8081}:8081"
+    environment:
+      # Spring Profile
+      - SPRING_PROFILES_ACTIVE=docker
+      
+      # Server Configuration
+      - SERVER_PORT=${SERVER_PORT:-8081}
+      
+      # RabbitMQ Configuration
+      - RABBITMQ_HOST=${RABBITMQ_HOST:-rabbitmq}
+      - RABBITMQ_PORT=${RABBITMQ_PORT:-5672}
+      - RABBITMQ_USERNAME=${RABBITMQ_USERNAME:-user}
+      - RABBITMQ_PASSWORD=${RABBITMQ_PASSWORD:-user}
+      
+      # Feign Clients URLs
+      - TURISTA_SERVICE_URL=${TURISTA_SERVICE_URL:-http://admin_users_api:8082}
+      - SERVICIO_SERVICE_URL=${SERVICIO_SERVICE_URL:-http://providers_api:8080}
+      
+      # Java Options (construido desde variables separadas)
+      - JAVA_OPTS=-Xms${JAVA_OPTS_XMS:-256m} -Xmx${JAVA_OPTS_XMX:-512m}
+    
+    volumes:
+      # Persistencia de base de datos SQLite
+      - preferences_data:/app/data
+    
+    networks:
+      - tesisNetwork
+    
+    restart: unless-stopped
+    
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8081/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+networks:
+  tesisNetwork:
+    external: true
+
+volumes:
+  preferences_data:
+    driver: local
