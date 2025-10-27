@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import com.iwellness.preferences.DTO.TuristaDTO;
 
 @EnableFeignClients
-@FeignClient(name = "turista-ms", url = "http://localhost:8082/usuarios")
+@FeignClient(name = "turista-ms", url = "${feign.client.turista.url:http://localhost:8082}/usuarios")
 public interface TuristaFeignClient {
 
     @GetMapping("/buscar/{idUsuario}")

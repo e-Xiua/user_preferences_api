@@ -79,6 +79,11 @@
     		<groupId>org.springframework.boot</groupId>
     		<artifactId>spring-boot-starter-amqp</artifactId>
 		</dependency>
+		<dependency>
+			<!-- Actuator for health checks -->
+    		<groupId>org.springframework.boot</groupId>
+    		<artifactId>spring-boot-starter-actuator</artifactId>
+		</dependency>
 	</dependencies>
 
 	<build>

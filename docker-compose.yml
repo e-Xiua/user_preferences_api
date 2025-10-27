@@ -6,7 +6,7 @@ services:
       context: ./preferences
       dockerfile: Dockerfile
     image: user-preferences-api:latest
-    container_name: user_preferences_api
+    container_name: user-preferences-api
     ports:
       - "${PREFERENCES_API_PORT:-8081}:8081"
     environment:
@@ -23,8 +23,8 @@ services:
       - RABBITMQ_PASSWORD=${RABBITMQ_PASSWORD:-user}
       
       # Feign Clients URLs
-      - TURISTA_SERVICE_URL=${TURISTA_SERVICE_URL:-http://admin_users_api:8082}
-      - SERVICIO_SERVICE_URL=${SERVICIO_SERVICE_URL:-http://providers_api:8080}
+      - TURISTA_SERVICE_URL=${TURISTA_SERVICE_URL:-http://admin-users-api:8082}
+      - SERVICIO_SERVICE_URL=${SERVICIO_SERVICE_URL:-http://providers-api:8080}
       
       # Java Options (construido desde variables separadas)
       - JAVA_OPTS=-Xms${JAVA_OPTS_XMS:-256m} -Xmx${JAVA_OPTS_XMX:-512m}
