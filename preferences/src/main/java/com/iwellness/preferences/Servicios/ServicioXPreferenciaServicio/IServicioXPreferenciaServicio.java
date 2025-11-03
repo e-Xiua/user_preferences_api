@@ -2,6 +2,7 @@ package com.iwellness.preferences.Servicios.ServicioXPreferenciaServicio;
 
 import java.util.List;
 
+import com.iwellness.preferences.DTO.ServicioXPreferenciaResponseDTO;
 import com.iwellness.preferences.Entidades.ServicioXPreferencia;
 
 public interface IServicioXPreferenciaServicio {
@@ -9,6 +10,8 @@ public interface IServicioXPreferenciaServicio {
     List<ServicioXPreferencia> buscarTodos();
 
     List<ServicioXPreferencia> obtenerPorIdServicio(Long idServicio);
+    
+    List<ServicioXPreferenciaResponseDTO> obtenerPorIdServicioDTO(Long idServicio);
 
     List<ServicioXPreferencia> findByPreferencia_IdPreferencias (Long idPreferencia);
 
