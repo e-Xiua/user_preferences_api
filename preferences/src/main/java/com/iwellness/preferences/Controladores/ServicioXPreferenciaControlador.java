@@ -62,7 +62,8 @@ public class ServicioXPreferenciaControlador {
     @GetMapping("/servicio/{idServicio}")
     public ResponseEntity<?> obtenerPorServicio(@PathVariable Long idServicio) {
         try{
-            return ResponseEntity.ok(servicioXPreferenciaServicio.obtenerPorIdServicio(idServicio));
+            // Retorna DTOs con PreferenciaDTO anidado
+            return ResponseEntity.ok(servicioXPreferenciaServicio.obtenerPorIdServicioDTO(idServicio));
         }catch (Exception e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No se encontró ningun servicio con ID: " + idServicio);
         }
