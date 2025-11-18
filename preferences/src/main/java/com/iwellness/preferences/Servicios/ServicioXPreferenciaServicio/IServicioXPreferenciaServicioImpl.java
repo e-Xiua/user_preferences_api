@@ -1,12 +1,15 @@
 package com.iwellness.preferences.Servicios.ServicioXPreferenciaServicio;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.iwellness.preferences.Clientes.ServicioFeignClient;
+import com.iwellness.preferences.DTO.PreferenciaDTO;
 import com.iwellness.preferences.DTO.ServicioDTO;
+import com.iwellness.preferences.DTO.ServicioXPreferenciaResponseDTO;
 import com.iwellness.preferences.Entidades.Preferencias;
 import com.iwellness.preferences.Entidades.ServicioXPreferencia;
 import com.iwellness.preferences.Repositorios.IPreferenciasRepositorio;
@@ -38,6 +41,45 @@ public class IServicioXPreferenciaServicioImpl implements IServicioXPreferenciaS
             throw new IllegalArgumentException("No se encontraron relaciones con el Servicio ID: " + idServicio);
         }
         return resultados;
+    }
+    
+    /**
+     * Convierte una entidad ServicioXPreferencia a DTO de respuesta
+     * Extrae explícitamente los IDs y nombres de la relación
+     */
+    public ServicioXPreferenciaResponseDTO convertirAResponseDTO(ServicioXPreferencia entidad) {
+        ServicioXPreferenciaResponseDTO dto = new ServicioXPreferenciaResponseDTO();
+        dto.setIdServicioXPreferencia(entidad.get_idServicioXPreferencia());
+        dto.setIdServicio(entidad.getIdServicio());
+        
+        // Extraer información de la preferencia si existe y crear PreferenciaDTO anidado
+        if (entidad.getPreferencia() != null) {
+            dto.setIdPreferencia(entidad.getPreferencia().get_idPreferencias());
+            
+            // Crear PreferenciaDTO anidado
+            PreferenciaDTO preferenciaDTO = new PreferenciaDTO();
+            preferenciaDTO.setId(entidad.getPreferencia().get_idPreferencias());
+            preferenciaDTO.setNombre(entidad.getPreferencia().getNombre());
+            preferenciaDTO.setImagen(entidad.getPreferencia().getImagen());
+            
+            dto.setNombrePreferencia(preferenciaDTO);
+        }
+        
+        return dto;
+    }
+    
+    /**
+     * Obtiene las preferencias de un servicio como DTOs de respuesta
+     */
+    public List<ServicioXPreferenciaResponseDTO> obtenerPorIdServicioDTO(Long idServicio) {
+        List<ServicioXPreferencia> resultados = servicioXPreferenciaRepositorio.findByIdServicio(idServicio);
+        if (resultados.isEmpty()) {
+            throw new IllegalArgumentException("No se encontraron relaciones con el Servicio ID: " + idServicio);
+        }
+        
+        return resultados.stream()
+            .map(this::convertirAResponseDTO)
+            .collect(Collectors.toList());
     }
 
     @Override
