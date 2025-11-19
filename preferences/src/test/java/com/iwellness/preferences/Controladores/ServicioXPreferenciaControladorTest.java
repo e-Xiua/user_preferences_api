@@ -130,7 +130,7 @@ public void testObtenerPorServicio() throws Exception {
 
 @Test
 public void testObtenerPorServicioError() throws Exception {
-    when(servicio.obtenerPorIdServicio(1L)).thenThrow(new RuntimeException("No encontrado"));
+    when(servicio.obtenerPorIdServicioDTO(1L)).thenThrow(new RuntimeException("No encontrado"));
 
     mockMvc.perform(get("/api/servicioXPreferencia/servicio/1"))
             .andExpect(status().isNotFound());
